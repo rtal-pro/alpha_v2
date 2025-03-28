@@ -24,6 +24,11 @@ import {
   SquareArrowOutUpRight,
   SquareArrowDownLeftIcon,
   ChevronDown,
+  Building2,
+  House,
+  MapPinHouse,
+  LandPlot,
+  Wrench,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -44,7 +49,7 @@ const applicationItems = [
   {
     title: "Prestataires",
     url: "/dashboard/providers",
-    icon: BadgeCheck,
+    icon: Wrench,
     subset: [
       {
         title: "Internes",
@@ -59,9 +64,26 @@ const applicationItems = [
     ],
   },
   {
-    title: "Clusters",
-    url: "/dashboard/clusters",
-    icon: Building,
+    title: "Localisations",
+    url: "/dashboard/localisations",
+    icon: LandPlot,
+    subset: [
+      {
+        title: "Clusters",
+        url: "/dashboard/localisations/clusters",
+        icon: Building2,
+      },
+      {
+        title: "Buildings",
+        url: "/dashboard/localisations/buildings",
+        icon: House,
+      },
+      {
+        title: "Spots",
+        url: "/dashboard/localisations/spots",
+        icon: MapPinHouse,
+      }
+    ],
   },
   {
     title: "Planning",
@@ -194,8 +216,8 @@ export function AppSidebar() {
 
       {/* Footer */}
       <SidebarFooter>
-        <div className='flex justify-between items-center'>
-          <button className='inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50'>
+        <div className='flex items-center'>
+          <button className='w-full inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-600 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-500'>
             <Link href='/'>Logout</Link>
           </button>
         </div>
