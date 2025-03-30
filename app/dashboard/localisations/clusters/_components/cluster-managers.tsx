@@ -1,34 +1,34 @@
 "use client"
 
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { User } from "@/types"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 
-const managers = [
-  { id: "u1", name: "Claire F.", email: "claire@example.com", avatarUrl: "" },
-  { id: "u2", name: "Dylan M.", email: "dylan@example.com", avatarUrl: "" },
-  { id: "u3", name: "Nora K.", email: "nora@example.com", avatarUrl: "" },
-  { id: "u4", name: "Jean B.", email: "jean@example.com", avatarUrl: "" },
-  { id: "u5", name: "Salim Z.", email: "salim@example.com", avatarUrl: "" },
-]
+interface Props {
+  managers: User[]
+}
 
-export function ClusterManagers() {
+export function ClusterManagers({ managers }: Props) {
+  if (!managers.length) return <p className="text-sm text-muted-foreground">Aucun manager assigné.</p>
+
   return (
-    <div className="mb-6">
-      <h3 className="text-sm font-semibold mb-2 text-[var(--color-secondary)]">Utilisateurs assignés</h3>
-      <ScrollArea className="h-48 w-full rounded-md border border-[var(--color-border)] p-2">
+    <div>
+      <h4 className="text-sm font-semibold mb-3">Responsables du cluster</h4>
+      <div className="space-y-3">
         {managers.map((user) => (
-          <div key={user.id} className="flex items-center gap-3 py-1 border-b border-[var(--color-border)] last:border-b-0">
-            <Avatar className="h-7 w-7">
-              <AvatarImage src={user.avatarUrl} alt={user.name} />
-              <AvatarFallback>{user.name[0]}</AvatarFallback>
+          <div key={user.id} className="flex items-center gap-4">
+            <Avatar>
+              <AvatarImage src={user.avatarUrl} alt={user.fullName} />
+              <AvatarFallback>{user.fullName.slice(0, 2)}</AvatarFallback>
             </Avatar>
-            <div>
-              <p className="font-medium text-sm leading-none text-[var(--color-foreground)]">{user.name}</p>
-              <p className="text-xs text-[var(--color-muted-foreground)]">{user.email}</p>
+            <div className="flex-1">
+              <p className="font-medium leading-none">{user.fullName}</p>
+              <p className="text-sm text-muted-foreground">{user.email}</p>
             </div>
+            <Badge variant="secondary">{user.role}</Badge>
           </div>
         ))}
-      </ScrollArea>
+      </div>
     </div>
   )
 }

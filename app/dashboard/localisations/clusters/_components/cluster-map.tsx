@@ -1,64 +1,48 @@
 "use client"
 
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
+import { Cluster } from "@/types"
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import L from "leaflet"
-import { useEffect } from "react"
 
-// Custom marker icon using --color-secondary
-const customIcon = new L.DivIcon({
-  html: '<div style="background-color: var(--color-secondary); width: 14px; height: 14px; border-radius: 9999px; border: 2px solid white;"></div>',
-  className: "",
-  iconSize: [14, 14],
-  iconAnchor: [7, 7],
+// Correction des icônes Leaflet dans Next.js (optionnel selon build)
+delete (L.Icon.Default.prototype as any)._getIconUrl
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon-2x.png",
+  iconUrl: "https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png",
 })
 
 interface Props {
-  clusterId: string
+  cluster: Cluster
 }
 
-const buildings = [
-  {
-    id: "b1",
-    name: "Bâtiment A",
-    coords: [48.8534, 2.3488],
-  },
-  {
-    id: "b2",
-    name: "Bâtiment B",
-    coords: [48.851, 2.35],
-  },
-]
+export function ClusterMap({ cluster }: Props) {
+  const buildings = cluster.buildings || []
 
-function AutoZoom() {
-  const map = useMap()
+  const center: [number, number] = buildings.length
+    ? buildings[0].gps.split(",").map(Number) as [number, number]
+    : [48.8566, 2.3522] // fallback Paris
 
-  useEffect(() => {
-    const bounds = L.latLngBounds(buildings.map((b) => b.coords as [number, number]))
-    map.fitBounds(bounds, { padding: [30, 30] })
-  }, [map])
-
-  return null
-}
-
-export default function ClusterMap({ clusterId }: Props) {
   return (
-    <MapContainer
-      center={[48.8534, 2.3488]}
-      zoom={14}
-      scrollWheelZoom={false}
-      className="h-full w-full z-0"
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      {buildings.map((b) => (
-        <Marker key={b.id} position={b.coords as [number, number]} icon={customIcon}>
-          <Popup>{b.name}</Popup>
-        </Marker>
-      ))}
-      <AutoZoom />
-    </MapContainer>
+    <div className="h-64 rounded overflow-hidden">
+      <MapContainer center={center} zoom={13} scrollWheelZoom={false} className="h-full w-full">
+        <TileLayer
+          attribution='© <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
+          url="https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png"
+        />
+        {buildings.map((b) => {
+          const [lat, lng] = b.gps.split(",").map(Number)
+          return (
+            <Marker key={b.id} position={[lat, lng]}>
+              <Popup>
+                <strong>{b.name}</strong>
+                <br />{b.address}
+              </Popup>
+            </Marker>
+          )
+        })}
+      </MapContainer>
+    </div>
   )
 }

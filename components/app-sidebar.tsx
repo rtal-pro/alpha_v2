@@ -35,7 +35,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const brandItem = {
-  title: "ALPHA",
+  title: "OPEXA",
   url: "/",
   icon: BrainCogIcon,
 };

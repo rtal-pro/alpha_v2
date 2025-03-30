@@ -1,61 +1,46 @@
-"use client";
+"use client"
 
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { formatDistanceToNow } from "date-fns"
+import { fr } from "date-fns/locale"
+import { Clock } from "lucide-react"
 
-const lastTasks = [
-  {
-    id: 1,
-    title: "Nettoyage Hall A",
-    date: "2024-03-25",
-    type: "Nettoyage",
-    user: "Ali K.",
-  },
-  {
-    id: 2,
-    title: "Contrôle extincteurs",
-    date: "2024-03-22",
-    type: "Sécurité",
-    user: "Fatou S.",
-  },
-  {
-    id: 3,
-    title: "Vérification éclairage B2",
-    date: "2024-03-20",
-    type: "Maintenance",
-    user: "M. Diallo",
-  },
-];
+interface ActivityItem {
+  id: string
+  label: string
+  type: "task" | "alert" | "log"
+  date: string
+}
 
-export function ClusterActivity() {
+const mockActivity: ActivityItem[] = Array.from({ length: 5 }).map((_, i) => ({
+  id: `activity-${i}`,
+  label: [
+    "Tâche planifiée",
+    "Alerte résolue",
+    "Inspection effectuée",
+    "Nouvel utilisateur ajouté",
+    "Mise à jour du bâtiment",
+  ][i % 5],
+  type: ["task", "alert", "log"][i % 3] as "task" | "alert" | "log",
+  date: new Date(Date.now() - i * 1000 * 60 * 60).toISOString(),
+}))
+
+export function ClusterActivity({ clusterId }: { clusterId: string }) {
   return (
-    <ScrollArea className="h-48 w-full rounded-md border border-[var(--color-border)]">
-      <div>
-        <h3 className="text-sm font-semibold mb-2 text-[var(--color-secondary)]">
-          Activité récente
-        </h3>
-        <div className="max-h-48 overflow-y-auto pr-1">
-          <ul className="space-y-2 text-sm">
-            {lastTasks.map((task) => (
-              <li
-                key={task.id}
-                className="flex items-start justify-between border-b border-[var(--color-border)] pb-1"
-              >
-                <div>
-                  <p className="font-medium text-[var(--color-foreground)]">
-                    {task.title}
-                  </p>
-                  <p className="text-[var(--color-muted-foreground)] text-xs">
-                    {task.type} • {task.date}
-                  </p>
-                </div>
-                <span className="text-xs italic text-[var(--color-muted-foreground)]">
-                  {task.user}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </ScrollArea>
-  );
+    <div>
+      <h4 className="text-sm font-semibold mb-3">Activité récente</h4>
+      <ul className="space-y-3">
+        {mockActivity.map((item) => (
+          <li key={item.id} className="flex items-start gap-3">
+            <Clock className="w-4 h-4 mt-1 text-muted-foreground" />
+            <div>
+              <p className="text-sm leading-snug">{item.label}</p>
+              <p className="text-xs text-muted-foreground">
+                {formatDistanceToNow(new Date(item.date), { addSuffix: true, locale: fr })}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 }

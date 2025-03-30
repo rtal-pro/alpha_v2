@@ -45,7 +45,8 @@ export default function DashboardCard({ data }: DashboardCardProps) {
       </CardHeader>
       <CardFooter className='flex-col items-start gap-1 text-sm'>
         <div className='line-clamp-1 flex gap-2 font-medium'>
-          {title} <IconComponent className='size-4' />
+        <IconComponent className='size-4' />
+          {title} 
         </div>
         <div className='text-muted-foreground'>{footerText}</div>
       </CardFooter>
