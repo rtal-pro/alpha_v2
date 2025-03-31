@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardDescription,
@@ -7,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import * as LucideIcons from "lucide-react"; // Import all icons dynamically
 
 interface DashboardCardProps {
@@ -23,11 +23,16 @@ interface DashboardCardProps {
 }
 
 export default function DashboardCard({ data }: DashboardCardProps) {
-  const { title, value, description, percentage, icon, trendIcon, footerText } = data;
+  const { title, value, description, percentage, icon, trendIcon, footerText } =
+    data;
 
   // Dynamically get icons from Lucide
-  const IconComponent = (LucideIcons[icon as keyof typeof LucideIcons] as React.ElementType) || LucideIcons.HelpCircle;
-  const TrendIconComponent = (LucideIcons[trendIcon as keyof typeof LucideIcons] as React.ElementType) || LucideIcons.HelpCircle;
+  const IconComponent =
+    (LucideIcons[icon as keyof typeof LucideIcons] as React.ElementType) ||
+    LucideIcons.HelpCircle;
+  const TrendIconComponent =
+    (LucideIcons[trendIcon as keyof typeof LucideIcons] as React.ElementType) ||
+    LucideIcons.HelpCircle;
 
   return (
     <Card className='@container/card'>
@@ -37,7 +42,7 @@ export default function DashboardCard({ data }: DashboardCardProps) {
           {value}
         </CardTitle>
         <div className='absolute right-4 top-4'>
-          <Badge className='flex gap-1 rounded-lg text-xs'>
+          <Badge className='flex gap-1 rounded-lg text-xs border-secondary bg-transparent text-[var(--color-secondary)]'>
             <TrendIconComponent className='size-3' />
             {percentage}
           </Badge>
@@ -45,8 +50,8 @@ export default function DashboardCard({ data }: DashboardCardProps) {
       </CardHeader>
       <CardFooter className='flex-col items-start gap-1 text-sm'>
         <div className='line-clamp-1 flex gap-2 font-medium'>
-        <IconComponent className='size-4' />
-          {title} 
+          <IconComponent className='size-4' />
+          {title}
         </div>
         <div className='text-muted-foreground'>{footerText}</div>
       </CardFooter>

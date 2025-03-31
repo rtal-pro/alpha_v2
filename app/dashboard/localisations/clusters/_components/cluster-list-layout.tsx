@@ -14,7 +14,7 @@ export default function ClusterListLayout() {
   const [clusters, setClusters] = useState<Cluster[]>([]);
   const [filtered, setFiltered] = useState<Cluster[]>([]);
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("all");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
 
@@ -42,7 +42,11 @@ export default function ClusterListLayout() {
           onStatusChange={setStatus}
         />
 
-        <button className="p-[3px] relative rounded-lg">
+        {/* BOUTON OUVERTURE DE MODALE */}
+        <button
+          onClick={() => setCreateOpen(true)}
+          className="p-[3px] relative rounded-lg"
+        >
           {/* Animated Border */}
           <div
             className="absolute inset-0 rounded-lg bg-gradient-to-l from-[var(--color-special-button)] to-[var(--color-secondary)] animate-shimmer"
@@ -57,13 +61,16 @@ export default function ClusterListLayout() {
         </button>
       </div>
 
+      {/* GRILLE DES CLUSTERS */}
       <ClusterCardsGrid
         clusters={filtered}
         onSelect={(id) => setSelectedId(id)}
       />
 
+      {/* MODALE DE CRÉATION */}
       <ClusterCreateDialog open={createOpen} onOpenChange={setCreateOpen} />
 
+      {/* FICHE DÉTAIL DU CLUSTER */}
       <ClusterSheetDetails
         clusterId={selectedId}
         onClose={() => setSelectedId(null)}

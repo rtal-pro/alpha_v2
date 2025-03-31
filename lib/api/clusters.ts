@@ -1,5 +1,5 @@
 // /lib/api/clusters.ts — MOCK VERSION
-import { faker } from "@faker-js/faker"
+import { faker } from "@faker-js/faker";
 
 // TYPES
 export type UserRole =
@@ -10,58 +10,78 @@ export type UserRole =
   | "superviseur"
   | "auditeur"
   | "prestataire"
-  | "interne"
+  | "interne";
 
 export interface Spot {
-  id: string
-  name: string
-  gps: string
-  type: string
-  status: "actif" | "inactif"
-  accessLevel: "public" | "restreint" | "sécurisé"
-  qrCodeUrl: string
-  notes?: string
+  id: string;
+  name: string;
+  gps: string;
+  type: string;
+  status: "actif" | "inactif";
+  accessLevel: "public" | "restreint" | "sécurisé";
+  qrCodeUrl: string;
+  notes?: string;
 }
 
 export interface Building {
-  id: string
-  name: string
-  address: string
-  gps: string
-  spots: Spot[]
-  surface: number
-  etages: number
-  responsable: User
-  type: "bureaux" | "industriel" | "résidentiel"
-  anneeConstruction: number
-  certifications?: string[]
+  id: string;
+  name: string;
+  address: string;
+  gps: string;
+  spots: Spot[];
+  surface: number;
+  etages: number;
+  responsable: User;
+  type: "bureaux" | "industriel" | "résidentiel";
+  anneeConstruction: number;
+  certifications?: string[];
 }
 
 export interface User {
-  id: string
-  fullName: string
-  email: string
-  role: UserRole
-  avatarUrl: string
-  phone?: string
+  id: string;
+  fullName: string;
+  email: string;
+  role: UserRole;
+  avatarUrl: string;
+  phone?: string;
 }
 
 export interface Cluster {
-  id: string
-  name: string
-  description?: string
-  status: "actif" | "inactif"
-  buildingsCount: number
-  tasksCount: number
-  buildings?: Building[]
-  managers?: User[]
-  createdAt: string
-  updatedAt: string
-  localisation?: string
-  secteur?: string
-  tags?: string[]
-  superficieTotale?: number
-  risquesIdentifiés?: string[]
+  id: string;
+  name: string;
+  description?: string;
+  status: "actif" | "inactif";
+  buildingsCount: number;
+  tasksCount: number;
+  buildings?: Building[];
+  managers?: User[];
+  createdAt: string;
+  updatedAt: string;
+  localisation?: string;
+  secteur?: string;
+  tags?: string[];
+  superficieTotale?: number;
+  risquesIdentifiés?: string[];
+}
+
+function generateFrenchClusterCoordinates(): [number, number] {
+  const lat = faker.number.float({ min: 43.0, max: 49.5, precision: 0.0001 });
+  const lng = faker.number.float({ min: -1.5, max: 7.5, precision: 0.0001 });
+  return [lat, lng];
+}
+
+function generateNearbyGps(baseLat: number, baseLng: number): string {
+  const latOffset = faker.number.float({
+    min: -0.02,
+    max: 0.02,
+    precision: 0.0001,
+  });
+  const lngOffset = faker.number.float({
+    min: -0.02,
+    max: 0.02,
+    precision: 0.0001,
+  });
+  return `${(baseLat + latOffset).toFixed(5)},${(baseLng + lngOffset).toFixed(5)}`;
 }
 
 function generateUser(role: UserRole): User {
@@ -71,29 +91,39 @@ function generateUser(role: UserRole): User {
     email: faker.internet.email(),
     role,
     avatarUrl: faker.image.avatar(),
-    phone: faker.phone.number({ style: "national" })
-  }
+    phone: faker.phone.number({ style: "national" }),
+  };
 }
 
 function generateSpots(count: number): Spot[] {
   return Array.from({ length: count }).map(() => ({
     id: faker.string.uuid(),
     name: faker.location.streetAddress(),
-    gps: faker.location.latitude() + "," + faker.location.longitude(),
+    gps: generateNearbyGps(
+      faker.number.float({ min: 43.0, max: 49.5, precision: 0.0001 }),
+      faker.number.float({ min: -1.5, max: 7.5, precision: 0.0001 })
+    ),
     type: faker.helpers.arrayElement(["nettoyage", "sécurité", "technique"]),
     status: faker.helpers.arrayElement(["actif", "inactif"]),
-    accessLevel: faker.helpers.arrayElement(["public", "restreint", "sécurisé"]),
+    accessLevel: faker.helpers.arrayElement([
+      "public",
+      "restreint",
+      "sécurisé",
+    ]),
     qrCodeUrl: faker.image.url(),
     notes: faker.lorem.sentence(),
-  }))
+  }));
 }
 
-function generateBuildings(count: number): Building[] {
+function generateBuildings(
+  count: number,
+  center: [number, number]
+): Building[] {
   return Array.from({ length: count }).map(() => ({
     id: faker.string.uuid(),
     name: faker.company.name(),
     address: faker.location.streetAddress(),
-    gps: faker.location.latitude() + "," + faker.location.longitude(),
+    gps: generateNearbyGps(center[0], center[1]),
     surface: faker.number.int({ min: 100, max: 10000 }),
     etages: faker.number.int({ min: 1, max: 12 }),
     responsable: generateUser(
@@ -101,14 +131,22 @@ function generateBuildings(count: number): Building[] {
     ),
     type: faker.helpers.arrayElement(["bureaux", "industriel", "résidentiel"]),
     anneeConstruction: faker.date.past({ years: 50 }).getFullYear(),
-    certifications: faker.helpers.arrayElements(["HQE", "BREEAM", "LEED"], { min: 0, max: 2 }),
+    certifications: faker.helpers.arrayElements(["HQE", "BREEAM", "LEED"], {
+      min: 0,
+      max: 2,
+    }),
     spots: generateSpots(faker.number.int({ min: 3, max: 8 })),
-  }))
+  }));
 }
 
 function generateClusters(count: number): Cluster[] {
+  const center = generateFrenchClusterCoordinates();
+
   return Array.from({ length: count }).map(() => {
-    const buildings = generateBuildings(faker.number.int({ min: 1, max: 5 }))
+    const buildings = generateBuildings(
+      faker.number.int({ min: 2, max: 5 }),
+      center
+    );
     return {
       id: faker.string.uuid(),
       name: faker.location.city() + " - " + faker.color.human(),
@@ -117,31 +155,41 @@ function generateClusters(count: number): Cluster[] {
       buildingsCount: buildings.length,
       tasksCount: faker.number.int({ min: 3, max: 50 }),
       buildings,
-      managers: Array.from({ length: faker.number.int({ min: 1, max: 3 }) }, () =>
-        generateUser(faker.helpers.arrayElement(["manager", "superviseur", "auditeur", "interne"]))
+      managers: Array.from(
+        { length: faker.number.int({ min: 1, max: 3 }) },
+        () =>
+          generateUser(
+            faker.helpers.arrayElement([
+              "manager",
+              "superviseur",
+              "auditeur",
+              "interne",
+            ])
+          )
       ),
       localisation: faker.location.city(),
-      secteur: faker.helpers.arrayElement(["tertiaire", "logistique", "résidentiel", "hospitalier"]),
-      tags: faker.helpers.arrayElements([
-        "prioritaire",
-        "à surveiller",
-        "historique",
-        "nouveau client"
-      ], { min: 0, max: 3 }),
+      secteur: faker.helpers.arrayElement([
+        "tertiaire",
+        "logistique",
+        "résidentiel",
+        "hospitalier",
+      ]),
+      tags: faker.helpers.arrayElements(
+        ["prioritaire", "à surveiller", "historique", "nouveau client"],
+        { min: 0, max: 3 }
+      ),
       superficieTotale: buildings.reduce((sum, b) => sum + b.surface, 0),
-      risquesIdentifiés: faker.helpers.arrayElements([
-        "amiante",
-        "inondation",
-        "sécurité incendie",
-        "accès limité"
-      ], { min: 0, max: 2 }),
+      risquesIdentifiés: faker.helpers.arrayElements(
+        ["amiante", "inondation", "sécurité incendie", "accès limité"],
+        { min: 0, max: 2 }
+      ),
       createdAt: faker.date.past().toISOString(),
       updatedAt: faker.date.recent().toISOString(),
-    }
-  })
+    };
+  });
 }
 
-const FAKE_CLUSTERS: Cluster[] = generateClusters(42)
+const FAKE_CLUSTERS: Cluster[] = generateClusters(42);
 
 export async function createCluster(data: Partial<Cluster>) {
   const newCluster: Cluster = {
@@ -160,23 +208,27 @@ export async function createCluster(data: Partial<Cluster>) {
     risquesIdentifiés: [],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-  }
-  FAKE_CLUSTERS.unshift(newCluster)
-  return newCluster
+  };
+  FAKE_CLUSTERS.unshift(newCluster);
+  return newCluster;
 }
 
 export async function updateCluster(id: string, data: Partial<Cluster>) {
-  const index = FAKE_CLUSTERS.findIndex((c) => c.id === id)
+  const index = FAKE_CLUSTERS.findIndex((c) => c.id === id);
   if (index !== -1) {
-    FAKE_CLUSTERS[index] = { ...FAKE_CLUSTERS[index], ...data, updatedAt: new Date().toISOString() }
+    FAKE_CLUSTERS[index] = {
+      ...FAKE_CLUSTERS[index],
+      ...data,
+      updatedAt: new Date().toISOString(),
+    };
   }
-  return FAKE_CLUSTERS[index]
+  return FAKE_CLUSTERS[index];
 }
 
 export async function getCluster(id: string) {
-  return FAKE_CLUSTERS.find((c) => c.id === id) ?? null
+  return FAKE_CLUSTERS.find((c) => c.id === id) ?? null;
 }
 
 export async function getAllClusters() {
-  return FAKE_CLUSTERS
+  return FAKE_CLUSTERS;
 }
