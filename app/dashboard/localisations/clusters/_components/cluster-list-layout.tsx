@@ -1,7 +1,7 @@
 // cluster-list-layout.tsx
 "use client";
 
-import { getAllClusters } from "@/lib/api/clusters";
+import { getAllClusters } from "@/lib/api/clusters/clusters";
 import { Cluster } from "@/types";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -33,8 +33,8 @@ export default function ClusterListLayout() {
   }, [clusters, search, status]);
 
   return (
-    <div className="p-6 space-y-4">
-      <div className="flex items-center justify-between">
+    <div className='p-6 space-y-4'>
+      <div className='flex items-center justify-between'>
         <ClusterFilters
           search={search}
           status={status}
@@ -45,17 +45,16 @@ export default function ClusterListLayout() {
         {/* BOUTON OUVERTURE DE MODALE */}
         <button
           onClick={() => setCreateOpen(true)}
-          className="p-[3px] relative rounded-lg"
-        >
+          className='p-[3px] relative rounded-lg'>
           {/* Animated Border */}
           <div
-            className="absolute inset-0 rounded-lg bg-gradient-to-l from-[var(--color-special-button)] to-[var(--color-secondary)] animate-shimmer"
+            className='absolute inset-0 rounded-lg bg-gradient-to-l from-[var(--color-special-button)] to-[var(--color-secondary)] animate-shimmer'
             style={{ backgroundSize: "200% 100%" }}
           />
 
           {/* Inner Button */}
-          <div className="relative px-6 py-2 bg-[var(--color-background)] rounded-[6px] text-[var(--color-foreground)] font-medium transition duration-200 hover:bg-transparent flex items-center gap-2">
-            <Plus className="w-4 h-4 text-[var(--color-primary)]" />
+          <div className='relative px-6 py-2 bg-[var(--color-background)] rounded-[6px] text-[var(--color-foreground)] font-medium transition duration-200 hover:bg-transparent flex items-center gap-2'>
+            <Plus className='w-4 h-4 text-[var(--color-primary)]' />
             Créer un cluster
           </div>
         </button>

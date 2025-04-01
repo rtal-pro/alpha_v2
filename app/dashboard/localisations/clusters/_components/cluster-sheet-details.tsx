@@ -10,9 +10,9 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getCluster } from "@/lib/api/clusters";
+import { getCluster } from "@/lib/api/clusters/clusters";
 import { Cluster } from "@/types";
-import { Trash2, Download, Building2 } from "lucide-react";
+import { Building2, Download, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ClusterActivity } from "./cluster-activity";
@@ -49,8 +49,9 @@ export function ClusterSheetDetails({ clusterId, onClose }: Props) {
 
   return (
     <Sheet open={!!clusterId} onOpenChange={onClose}>
-      <SheetContent side='right' className='w-full sm:max-w-[95vw] md:max-w-[85vw] lg:max-w-[35vw] px-4'
-      >
+      <SheetContent
+        side='right'
+        className='w-full sm:max-w-[95vw] md:max-w-[85vw] lg:max-w-[35vw] px-4'>
         <SheetHeader>
           <SheetTitle className='text-xl text-bold flex items-center justify-between'>
             <div className='flex items-center gap-2'>

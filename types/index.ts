@@ -1,3 +1,6 @@
+import { MemberRole } from "@/lib/constants/menber-roles";
+import { ProviderType } from "@/lib/constants/provider-types"
+
 export type UserRole =
   | "manager"
   | "opérateur"
@@ -7,6 +10,26 @@ export type UserRole =
   | "auditeur"
   | "prestataire"
   | "interne"
+
+  export type ProviderMember = {
+    id: string
+    nom: string
+    prenom: string
+    role: MemberRole
+    actif: boolean
+    email: string
+    telephone: string
+    avatar: string
+  }
+  
+  export type Provider = {
+    id: string
+    nom: string
+    type: ProviderType
+    actif: boolean
+    note: number
+    membres: ProviderMember[]
+  }
 
 export interface User {
   id: string

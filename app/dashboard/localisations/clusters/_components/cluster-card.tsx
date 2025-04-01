@@ -117,7 +117,7 @@ export function ClusterCard({ cluster, onClick, index = 0 }: Props) {
         </div>
 
         <ScrollArea className='max-h-[160px] mt-2 relative pr-1'>
-          <div className='flex flex-wrap gap-2 pb-2'>
+          <div className='flex flex-col gap-2 pb-2'>
             {buildings.map((b) => {
               const taskCount = Math.floor(Math.random() * 10);
               return (

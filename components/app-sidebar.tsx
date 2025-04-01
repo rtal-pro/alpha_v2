@@ -50,18 +50,6 @@ const applicationItems = [
     title: "Prestataires",
     url: "/dashboard/providers",
     icon: Wrench,
-    subset: [
-      {
-        title: "Internes",
-        url: "/dashboard/providers/internals",
-        icon: SquareArrowDownLeftIcon,
-      },
-      {
-        title: "Externes",
-        url: "/dashboard/providers/externals",
-        icon: SquareArrowOutUpRight,
-      },
-    ],
   },
   {
     title: "Localisations",
@@ -114,7 +102,7 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar variant='inset'>
+    <Sidebar variant='inset' className='h-full'>
       {/* Brand Header */}
       <SidebarHeader>
         <div className='flex items-center gap-2 p-4 hover:bg-muted rounded-md transition-colors'>

@@ -65,8 +65,8 @@ export interface Cluster {
 }
 
 function generateFrenchClusterCoordinates(): [number, number] {
-  const lat = faker.number.float({ min: 43.0, max: 49.5, precision: 0.0001 });
-  const lng = faker.number.float({ min: -1.5, max: 7.5, precision: 0.0001 });
+  const lat = faker.number.float({ min: 43.0, max: 49.5, fractionDigits: 5 });
+  const lng = faker.number.float({ min: -1.5, max: 7.5, fractionDigits: 5 });
   return [lat, lng];
 }
 
@@ -74,12 +74,12 @@ function generateNearbyGps(baseLat: number, baseLng: number): string {
   const latOffset = faker.number.float({
     min: -0.02,
     max: 0.02,
-    precision: 0.0001,
+    fractionDigits: 5,
   });
   const lngOffset = faker.number.float({
     min: -0.02,
     max: 0.02,
-    precision: 0.0001,
+    fractionDigits: 5,
   });
   return `${(baseLat + latOffset).toFixed(5)},${(baseLng + lngOffset).toFixed(5)}`;
 }
@@ -100,8 +100,8 @@ function generateSpots(count: number): Spot[] {
     id: faker.string.uuid(),
     name: faker.location.streetAddress(),
     gps: generateNearbyGps(
-      faker.number.float({ min: 43.0, max: 49.5, precision: 0.0001 }),
-      faker.number.float({ min: -1.5, max: 7.5, precision: 0.0001 })
+      faker.number.float({ min: 43.0, max: 49.5, fractionDigits: 5 }),
+      faker.number.float({ min: -1.5, max: 7.5, fractionDigits: 5 })
     ),
     type: faker.helpers.arrayElement(["nettoyage", "sécurité", "technique"]),
     status: faker.helpers.arrayElement(["actif", "inactif"]),
