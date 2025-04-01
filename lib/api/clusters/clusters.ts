@@ -124,7 +124,7 @@ function generateBuildings(
     name: faker.company.name(),
     address: faker.location.streetAddress(),
     gps: generateNearbyGps(center[0], center[1]),
-    surface: faker.number.int({ min: 100, max: 10000 }),
+    surface: faker.number.int({ min: 100, max: 1000 }),
     etages: faker.number.int({ min: 1, max: 12 }),
     responsable: generateUser(
       faker.helpers.arrayElement(["technicien", "chef de site", "prestataire"])

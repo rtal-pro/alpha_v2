@@ -1,3 +1,4 @@
+"use client";
 import { Cluster } from "@/types"
 import { ClusterCard } from "./cluster-card"
 
